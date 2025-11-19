@@ -3,6 +3,7 @@ import { currentUser } from '@annoncify/auth/server'
 import { prisma } from '@annoncify/database'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@annoncify/ui'
 import { Package, TrendingUp, Eye, Heart } from 'lucide-react'
+import { ExtensionStatus } from '@/components/extension-status'
 
 export default async function DashboardPage() {
   const clerkUser = await currentUser()
@@ -67,6 +68,11 @@ export default async function DashboardPage() {
           <p className="text-brand-gray-400 mt-2">
             Here's an overview of your listings across all platforms
           </p>
+        </div>
+
+        {/* Extension Status */}
+        <div className="mb-8">
+          <ExtensionStatus />
         </div>
 
         {/* Stats Grid */}

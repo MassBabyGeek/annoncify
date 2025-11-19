@@ -1,6 +1,7 @@
 import { useTranslations } from 'next-intl'
 import { Hero } from '@/components/landing/hero'
 import { Features } from '@/components/landing/features'
+import { ExtensionDownload } from '@/components/landing/extension-download'
 import { Pricing } from '@/components/landing/pricing'
 import { CTA } from '@/components/landing/cta'
 import { Footer } from '@/components/landing/footer'
@@ -13,6 +14,7 @@ export default function HomePage() {
       <main>
         <Hero />
         <Features />
+        <ExtensionDownload />
         <Pricing />
         <CTA />
       </main>
