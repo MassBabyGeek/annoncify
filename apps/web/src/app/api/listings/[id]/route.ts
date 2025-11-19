@@ -12,7 +12,7 @@ import { prisma } from '@annoncify/database'
  */
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     console.log('[API] DELETE /api/listings/[id] - Start')
@@ -34,9 +34,10 @@ export async function DELETE(
       return NextResponse.json({ error: 'User not found' }, { status: 404 })
     }
 
+    const { id } = await params
     // Récupérer l'annonce
     const listing = await prisma.listing.findUnique({
-      where: { id: params.id },
+      where: { id },
       include: { user: true },
     })
 
@@ -57,11 +58,11 @@ export async function DELETE(
       )
     }
 
-    console.log(`[API] Deleting listing ${params.id} (isAdmin: ${isAdmin}, isOwner: ${isOwner})`)
+    console.log(`[API] Deleting listing ${id} (isAdmin: ${isAdmin}, isOwner: ${isOwner})`)
 
     // Soft delete : mettre le status à DELETED
     await prisma.listing.update({
-      where: { id: params.id },
+      where: { id },
       data: {
         status: 'DELETED',
       },
@@ -102,7 +103,7 @@ export async function DELETE(
  */
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const user = await currentUser()
@@ -118,8 +119,9 @@ export async function GET(
       return NextResponse.json({ error: 'User not found' }, { status: 404 })
     }
 
+    const { id } = await params
     const listing = await prisma.listing.findUnique({
-      where: { id: params.id },
+      where: { id },
       include: {
         publications: true,
         user: true,

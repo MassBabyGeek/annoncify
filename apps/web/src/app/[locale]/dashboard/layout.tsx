@@ -10,7 +10,7 @@ export default async function DashboardLayout({
   params
 }: {
   children: React.ReactNode
-  params: { locale: string }
+  params: Promise<{ locale: string }>
 }) {
   const user = await currentUser()
 

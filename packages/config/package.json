@@ -8,6 +8,7 @@
   ],
   "exports": {
     "./eslint": "./eslint-preset.js",
+    "./eslint-preset": "./eslint-preset.js",
     "./tailwind": "./tailwind.config.ts"
   },
   "devDependencies": {

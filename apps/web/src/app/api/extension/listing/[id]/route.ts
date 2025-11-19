@@ -8,7 +8,7 @@ import { prisma } from '@annoncify/database'
  */
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     // Vérifier l'authentification
@@ -26,10 +26,11 @@ export async function GET(
       return NextResponse.json({ error: 'User not found' }, { status: 404 })
     }
 
+    const { id } = await params
     // Récupérer l'annonce
     const listing = await prisma.listing.findUnique({
       where: {
-        id: params.id,
+        id,
       },
     })
 

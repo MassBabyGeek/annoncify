@@ -1,6 +1,5 @@
 import { Resend } from 'resend'
-import { prisma } from '@annoncify/database'
-import { EmailTrigger, EmailLogStatus } from '@prisma/client'
+import { prisma, EmailTrigger, EmailLogStatus } from '@annoncify/database'
 
 // Initialize Resend with API key
 const resend = new Resend(process.env.RESEND_API_KEY)
@@ -10,7 +9,7 @@ interface EmailVariables {
   lastName?: string
   email?: string
   listingTitle?: string
-  listingCount?: number
+  listingCount?: number | string
   subscriptionName?: string
   subscriptionEndDate?: string
   [key: string]: any
@@ -86,7 +85,7 @@ export async function sendTriggeredEmail(options: SendEmailOptions) {
       subject,
       html: htmlContent,
       text: textContent,
-      replyTo: template.replyTo || undefined,
+      reply_to: template.replyTo || undefined,
       tags: [
         {
           name: 'trigger',

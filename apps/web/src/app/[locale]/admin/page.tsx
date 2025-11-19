@@ -175,10 +175,8 @@ async function RecentActivityList() {
   const activities = await prisma.userActivity.findMany({
     take: 5,
     orderBy: { createdAt: 'desc' },
-    include: {
-      // We can't include user directly as userId is nullable
-      // We'll fetch user data separately if needed
-    },
+    // We can't include user directly as userId is nullable
+    // We'll fetch user data separately if needed
   })
 
   if (activities.length === 0) {

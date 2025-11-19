@@ -8,7 +8,7 @@ import { prisma } from '@annoncify/database'
  */
 export async function POST(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     // Vérifier l'authentification
@@ -26,6 +26,7 @@ export async function POST(
       return NextResponse.json({ error: 'User not found' }, { status: 404 })
     }
 
+    const { id } = await params
     // Récupérer les données
     const data = await req.json()
     const { publicationId, externalId, externalUrl, status } = data

@@ -119,7 +119,6 @@ export const LEBONCOIN_CATEGORIES: LeBonCoinCategory[] = [
     id: 'animaux',
     label: 'Animaux',
     subcategories: [
-      { id: 'animaux', label: 'Animaux' },
       { id: 'accessoires_animaux', label: 'Accessoires animaux' },
       { id: 'animaux_perdus', label: 'Animaux perdus' },
     ],

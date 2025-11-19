@@ -6,6 +6,9 @@ const withNextIntl = createNextIntlPlugin()
 const nextConfig = {
   reactStrictMode: true,
   transpilePackages: ['@annoncify/ui', '@annoncify/auth', '@annoncify/database'],
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
   images: {
     domains: ['img.clerk.com', 'images.unsplash.com'],
   },

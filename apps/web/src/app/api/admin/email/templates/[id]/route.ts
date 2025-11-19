@@ -6,7 +6,7 @@ import { prisma } from '@annoncify/database'
  * API endpoint to get a specific email template
  * GET /api/admin/email/templates/[id]
  */
-export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     // Check authentication and admin role
     const user = await currentUser()
@@ -22,8 +22,9 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
     }
 
+    const { id } = await params
     const template = await prisma.emailTemplate.findUnique({
-      where: { id: params.id },
+      where: { id },
       include: {
         _count: {
           select: {
@@ -51,7 +52,7 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
  * API endpoint to update an email template
  * PUT /api/admin/email/templates/[id]
  */
-export async function PUT(req: NextRequest, { params }: { params: { id: string } }) {
+export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     // Check authentication and admin role
     const user = await currentUser()
@@ -67,6 +68,7 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
     }
 
+    const { id } = await params
     const body = await req.json()
     const {
       name,
@@ -83,7 +85,7 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
     } = body
 
     const template = await prisma.emailTemplate.update({
-      where: { id: params.id },
+      where: { id },
       data: {
         name,
         subject,
@@ -113,7 +115,7 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
  * API endpoint to delete an email template
  * DELETE /api/admin/email/templates/[id]
  */
-export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     // Check authentication and admin role
     const user = await currentUser()
@@ -129,8 +131,9 @@ export async function DELETE(req: NextRequest, { params }: { params: { id: strin
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
     }
 
+    const { id } = await params
     await prisma.emailTemplate.delete({
-      where: { id: params.id },
+      where: { id },
     })
 
     return NextResponse.json({ success: true })

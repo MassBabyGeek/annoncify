@@ -7,7 +7,7 @@ import { sendTestEmail } from '@/lib/email'
  * API endpoint to send a test email
  * POST /api/admin/email/templates/[id]/test
  */
-export async function POST(req: NextRequest, { params }: { params: { id: string } }) {
+export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     // Check authentication and admin role
     const user = await currentUser()
@@ -23,6 +23,7 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
     }
 
+    const { id } = await params
     const body = await req.json()
     const { email } = body
 
@@ -32,7 +33,7 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
 
     // Get template
     const template = await prisma.emailTemplate.findUnique({
-      where: { id: params.id },
+      where: { id },
     })
 
     if (!template) {
