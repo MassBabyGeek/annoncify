@@ -1,0 +1,128 @@
+{
+  "landing": {
+    "hero": {
+      "title": "Centralize All Your Listings",
+      "subtitle": "Manage Vinted, LeBonCoin, eBay, and more from one powerful dashboard",
+      "cta": "Get Started Free",
+      "secondaryCta": "View Pricing"
+    },
+    "features": {
+      "title": "Everything You Need",
+      "subtitle": "Powerful features to manage your online listings effortlessly",
+      "import": {
+        "title": "Multi-Platform Import",
+        "description": "Import listings from Vinted, LeBonCoin, eBay, Amazon, and more with one click"
+      },
+      "dashboard": {
+        "title": "Unified Dashboard",
+        "description": "Manage all your listings from a single, intuitive interface"
+      },
+      "analytics": {
+        "title": "Advanced Analytics",
+        "description": "Track views, favorites, and performance across all platforms"
+      },
+      "auto": {
+        "title": "Auto-Republish",
+        "description": "Automatically republish expired listings to stay visible"
+      }
+    },
+    "pricing": {
+      "title": "Simple, Transparent Pricing",
+      "subtitle": "Choose the plan that fits your needs",
+      "free": {
+        "name": "Free",
+        "price": "0",
+        "description": "Perfect to get started",
+        "features": [
+          "5 listings per month",
+          "2 platforms",
+          "Basic dashboard",
+          "Email support"
+        ],
+        "cta": "Start Free"
+      },
+      "starter": {
+        "name": "Starter",
+        "price": "9",
+        "description": "For casual sellers",
+        "features": [
+          "50 listings per month",
+          "All platforms",
+          "Advanced dashboard",
+          "Analytics",
+          "Priority support"
+        ],
+        "cta": "Get Started"
+      },
+      "pro": {
+        "name": "Pro",
+        "price": "24",
+        "description": "For power sellers",
+        "features": [
+          "200 listings per month",
+          "All platforms",
+          "Auto-republish",
+          "Advanced analytics",
+          "Templates",
+          "Priority support"
+        ],
+        "cta": "Get Pro",
+        "popular": true
+      },
+      "business": {
+        "name": "Business",
+        "price": "49",
+        "description": "For professional sellers",
+        "features": [
+          "1000 listings per month",
+          "All platforms",
+          "Everything in Pro",
+          "API access",
+          "Dedicated support",
+          "Custom integrations"
+        ],
+        "cta": "Get Business"
+      },
+      "perMonth": "/month",
+      "popularBadge": "Most Popular"
+    },
+    "cta": {
+      "title": "Ready to Centralize Your Listings?",
+      "subtitle": "Join thousands of sellers managing their listings more efficiently",
+      "button": "Get Started Now"
+    },
+    "footer": {
+      "product": "Product",
+      "features": "Features",
+      "pricing": "Pricing",
+      "company": "Company",
+      "about": "About",
+      "contact": "Contact",
+      "legal": "Legal",
+      "privacy": "Privacy Policy",
+      "terms": "Terms of Service",
+      "tagline": "Your listings, centralized"
+    }
+  },
+  "nav": {
+    "features": "Features",
+    "pricing": "Pricing",
+    "dashboard": "Dashboard",
+    "signIn": "Sign In",
+    "signUp": "Get Started"
+  },
+  "dashboard": {
+    "nav": {
+      "dashboard": "Dashboard",
+      "listings": "Listings",
+      "createListing": "Create Listing",
+      "settings": "Settings"
+    },
+    "actions": {
+      "delete": "Delete",
+      "confirmDelete": "Are you sure you want to delete this listing?",
+      "deleteSuccess": "Listing deleted successfully",
+      "deleteError": "Error deleting listing"
+    }
+  }
+}

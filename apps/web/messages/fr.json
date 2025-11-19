@@ -1,0 +1,128 @@
+{
+  "landing": {
+    "hero": {
+      "title": "Centralisez Toutes Vos Annonces",
+      "subtitle": "Gérez Vinted, LeBonCoin, eBay et plus depuis un tableau de bord unique",
+      "cta": "Commencer Gratuitement",
+      "secondaryCta": "Voir les Tarifs"
+    },
+    "features": {
+      "title": "Tout Ce Dont Vous Avez Besoin",
+      "subtitle": "Des fonctionnalités puissantes pour gérer vos annonces en ligne sans effort",
+      "import": {
+        "title": "Import Multi-Plateformes",
+        "description": "Importez vos annonces depuis Vinted, LeBonCoin, eBay, Amazon et plus en un clic"
+      },
+      "dashboard": {
+        "title": "Tableau de Bord Unifié",
+        "description": "Gérez toutes vos annonces depuis une interface unique et intuitive"
+      },
+      "analytics": {
+        "title": "Statistiques Avancées",
+        "description": "Suivez les vues, favoris et performances sur toutes les plateformes"
+      },
+      "auto": {
+        "title": "Republication Auto",
+        "description": "Republiez automatiquement les annonces expirées pour rester visible"
+      }
+    },
+    "pricing": {
+      "title": "Tarifs Simples et Transparents",
+      "subtitle": "Choisissez le plan qui correspond à vos besoins",
+      "free": {
+        "name": "Gratuit",
+        "price": "0",
+        "description": "Parfait pour commencer",
+        "features": [
+          "5 annonces par mois",
+          "2 plateformes",
+          "Tableau de bord basique",
+          "Support par email"
+        ],
+        "cta": "Commencer"
+      },
+      "starter": {
+        "name": "Starter",
+        "price": "9",
+        "description": "Pour vendeurs occasionnels",
+        "features": [
+          "50 annonces par mois",
+          "Toutes les plateformes",
+          "Tableau de bord avancé",
+          "Statistiques",
+          "Support prioritaire"
+        ],
+        "cta": "Commencer"
+      },
+      "pro": {
+        "name": "Pro",
+        "price": "24",
+        "description": "Pour vendeurs actifs",
+        "features": [
+          "200 annonces par mois",
+          "Toutes les plateformes",
+          "Republication auto",
+          "Statistiques avancées",
+          "Templates",
+          "Support prioritaire"
+        ],
+        "cta": "Choisir Pro",
+        "popular": true
+      },
+      "business": {
+        "name": "Business",
+        "price": "49",
+        "description": "Pour vendeurs professionnels",
+        "features": [
+          "1000 annonces par mois",
+          "Toutes les plateformes",
+          "Tout dans Pro",
+          "Accès API",
+          "Support dédié",
+          "Intégrations personnalisées"
+        ],
+        "cta": "Choisir Business"
+      },
+      "perMonth": "/mois",
+      "popularBadge": "Le Plus Populaire"
+    },
+    "cta": {
+      "title": "Prêt à Centraliser Vos Annonces ?",
+      "subtitle": "Rejoignez des milliers de vendeurs qui gèrent leurs annonces plus efficacement",
+      "button": "Commencer Maintenant"
+    },
+    "footer": {
+      "product": "Produit",
+      "features": "Fonctionnalités",
+      "pricing": "Tarifs",
+      "company": "Entreprise",
+      "about": "À propos",
+      "contact": "Contact",
+      "legal": "Légal",
+      "privacy": "Politique de confidentialité",
+      "terms": "Conditions d'utilisation",
+      "tagline": "Vos annonces, centralisées"
+    }
+  },
+  "nav": {
+    "features": "Fonctionnalités",
+    "pricing": "Tarifs",
+    "dashboard": "Tableau de bord",
+    "signIn": "Connexion",
+    "signUp": "Commencer"
+  },
+  "dashboard": {
+    "nav": {
+      "dashboard": "Tableau de bord",
+      "listings": "Annonces",
+      "createListing": "Créer une annonce",
+      "settings": "Paramètres"
+    },
+    "actions": {
+      "delete": "Supprimer",
+      "confirmDelete": "Êtes-vous sûr de vouloir supprimer cette annonce ?",
+      "deleteSuccess": "Annonce supprimée avec succès",
+      "deleteError": "Erreur lors de la suppression de l'annonce"
+    }
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "name": "@annoncify/config",
+  "version": "0.0.0",
+  "private": true,
+  "files": [
+    "eslint-preset.js",
+    "tailwind.config.ts"
+  ],
+  "exports": {
+    "./eslint": "./eslint-preset.js",
+    "./tailwind": "./tailwind.config.ts"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.4.3",
+    "tailwindcss-animate": "^1.0.7"
+  }
+}

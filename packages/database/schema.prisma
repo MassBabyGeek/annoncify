@@ -1,0 +1,536 @@
+// Annoncify Database Schema
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+// ============================================
+// USER & AUTHENTICATION
+// ============================================
+
+enum UserRole {
+  FREE
+  STARTER
+  PRO
+  BUSINESS
+  ENTERPRISE
+  ADMIN
+}
+
+model User {
+  id        String   @id @default(cuid())
+  clerkId   String   @unique // Clerk User ID
+  email     String   @unique
+  firstName String?
+  lastName  String?
+  imageUrl  String?
+
+  role      UserRole @default(FREE)
+
+  // Subscription info
+  stripeCustomerId       String?   @unique
+  stripeSubscriptionId   String?   @unique
+  stripePriceId          String?
+  stripeCurrentPeriodEnd DateTime?
+
+  // Usage tracking
+  monthlyListingsCount Int      @default(0)
+  lastResetDate        DateTime @default(now())
+
+  // Relations
+  listings      Listing[]
+  importLogs    ImportLog[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([clerkId])
+  @@index([email])
+  @@index([stripeCustomerId])
+}
+
+// ============================================
+// LISTINGS (ANNONCES)
+// ============================================
+
+enum ListingStatus {
+  DRAFT
+  ACTIVE
+  PAUSED
+  SOLD
+  EXPIRED
+  DELETED
+}
+
+enum Platform {
+  VINTED
+  LEBONCOIN
+  AMAZON
+  EBAY
+  FACEBOOK_MARKETPLACE
+  CUSTOM
+}
+
+model Listing {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Basic info
+  title       String
+  description String   @db.Text
+  price       Float
+  currency    String   @default("EUR")
+
+  // Platform info (deprecated - use publications instead)
+  platform         Platform
+  externalId       String? // ID from the external platform
+  externalUrl      String?
+
+  // Media
+  images      String[] // Array of image URLs
+
+  // Status
+  status      ListingStatus @default(DRAFT)
+
+  // Metadata
+  category          String?
+  leboncoinCategory String? // LeBonCoin category ID from @annoncify/shared/categories
+  condition         String? // new, like_new, used, etc.
+  tags              String[]
+
+  // Custom fields for category/platform-specific data (e.g., moto brand, model, year)
+  customFields      Json?
+
+  // Location
+  location    String?
+  zipCode     String?
+
+  // Analytics (aggregated from publications)
+  views       Int      @default(0)
+  favorites   Int      @default(0)
+
+  // Auto-republish
+  autoRepublish     Boolean  @default(false)
+  lastRepublishedAt DateTime?
+
+  // Relations
+  publications ListingPublication[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+  @@index([platform])
+  @@index([status])
+  @@index([createdAt])
+}
+
+// Track publication status on each platform
+model ListingPublication {
+  id          String   @id @default(cuid())
+  listingId   String
+  listing     Listing  @relation(fields: [listingId], references: [id], onDelete: Cascade)
+
+  platform    Platform
+
+  // Status on this platform
+  status      ListingStatus @default(DRAFT)
+
+  // External platform info
+  externalId  String?
+  externalUrl String?
+
+  // Platform-specific analytics
+  views       Int      @default(0)
+  favorites   Int      @default(0)
+  messages    Int      @default(0)
+
+  // Publishing metadata
+  publishedAt  DateTime?
+  lastSyncedAt DateTime?
+
+  // Error tracking
+  lastError    String?  @db.Text
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([listingId, platform])
+  @@index([listingId])
+  @@index([platform])
+  @@index([status])
+}
+
+// ============================================
+// IMPORT LOGS
+// ============================================
+
+enum ImportStatus {
+  PENDING
+  PROCESSING
+  SUCCESS
+  FAILED
+}
+
+model ImportLog {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  platform    Platform
+  status      ImportStatus @default(PENDING)
+
+  // Metrics
+  itemsTotal     Int      @default(0)
+  itemsImported  Int      @default(0)
+  itemsFailed    Int      @default(0)
+
+  // Error tracking
+  errorMessage   String?  @db.Text
+
+  // Processing time
+  startedAt   DateTime  @default(now())
+  completedAt DateTime?
+
+  @@index([userId])
+  @@index([platform])
+  @@index([status])
+  @@index([startedAt])
+}
+
+// ============================================
+// SUBSCRIPTION PLANS (Reference data)
+// ============================================
+
+model SubscriptionPlan {
+  id                String   @id @default(cuid())
+  name              String   @unique
+  stripePriceId     String   @unique
+  stripeProductId   String   @unique
+
+  // Limits
+  monthlyListings   Int      // -1 for unlimited
+  platformsAccess   Platform[] // Empty array = all platforms
+
+  // Pricing
+  price             Float
+  currency          String   @default("EUR")
+  interval          String   @default("month") // month, year
+
+  // Features
+  features          String[]
+
+  // Priority
+  supportPriority   Boolean  @default(false)
+  autoRepublish     Boolean  @default(false)
+  analytics         Boolean  @default(false)
+
+  active            Boolean  @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([stripePriceId])
+}
+
+// ============================================
+// TEMPLATES (for reusable listings)
+// ============================================
+
+model ListingTemplate {
+  id          String   @id @default(cuid())
+  userId      String
+
+  name        String
+  title       String
+  description String   @db.Text
+  category    String?
+  tags        String[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+}
+
+// ============================================
+// WEBHOOKS LOG (Stripe, Clerk, etc.)
+// ============================================
+
+model WebhookEvent {
+  id          String   @id @default(cuid())
+
+  source      String   // "stripe", "clerk", etc.
+  eventType   String
+  eventId     String?  @unique
+
+  payload     Json
+  processed   Boolean  @default(false)
+
+  createdAt   DateTime @default(now())
+
+  @@index([source])
+  @@index([eventType])
+  @@index([processed])
+}
+
+// ============================================
+// FORM FIELD CONFIGURATIONS (Admin-managed)
+// ============================================
+
+model FormFieldConfig {
+  id          String   @id @default(cuid())
+
+  categoryId  String   // e.g., "motos", "motos_occasion"
+  platform    Platform
+
+  // Form field definition stored as JSON
+  // Matches FormField[] from @annoncify/shared/form-fields
+  fields      Json
+
+  // Metadata
+  name        String   // Human-readable name (e.g., "LeBonCoin - Motos")
+  description String?  @db.Text
+  active      Boolean  @default(true)
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@unique([categoryId, platform])
+  @@index([categoryId])
+  @@index([platform])
+  @@index([active])
+}
+
+// ============================================
+// ANALYTICS & TRACKING (for Admin Dashboard)
+// ============================================
+
+enum ActivityType {
+  LOGIN
+  LOGOUT
+  LISTING_CREATED
+  LISTING_UPDATED
+  LISTING_DELETED
+  LISTING_PUBLISHED
+  LISTING_UNPUBLISHED
+  SUBSCRIPTION_CREATED
+  SUBSCRIPTION_UPDATED
+  SUBSCRIPTION_CANCELLED
+  IMPORT_STARTED
+  IMPORT_COMPLETED
+  PROFILE_UPDATED
+  SETTINGS_UPDATED
+}
+
+model UserActivity {
+  id          String   @id @default(cuid())
+  userId      String?  // Nullable for anonymous/system events
+
+  type        ActivityType
+  action      String   // Description of the action
+  metadata    Json?    // Additional context data
+
+  // Request info
+  ipAddress   String?
+  userAgent   String?  @db.Text
+
+  createdAt   DateTime @default(now())
+
+  @@index([userId])
+  @@index([type])
+  @@index([createdAt])
+}
+
+model LoginLog {
+  id          String   @id @default(cuid())
+  userId      String?  // Nullable for failed logins
+
+  success     Boolean
+  method      String   // "clerk", "oauth-google", etc.
+
+  // Details
+  ipAddress   String?
+  userAgent   String?  @db.Text
+  location    String?  // Geo-location if available
+
+  errorMessage String? @db.Text
+
+  createdAt   DateTime @default(now())
+
+  @@index([userId])
+  @@index([success])
+  @@index([createdAt])
+}
+
+// ============================================
+// EMAIL MARKETING & CAMPAIGNS
+// ============================================
+
+enum EmailTrigger {
+  USER_CREATED           // Après la création de compte
+  USER_VERIFIED          // Email vérifié
+  SUBSCRIPTION_STARTED   // Nouvel abonnement
+  SUBSCRIPTION_RENEWED   // Renouvellement d'abonnement
+  SUBSCRIPTION_CANCELLED // Annulation d'abonnement
+  SUBSCRIPTION_ENDING    // Abonnement va expirer (7 jours avant)
+  LISTING_PUBLISHED      // Annonce publiée
+  LISTING_SOLD           // Annonce vendue
+  LISTING_EXPIRED        // Annonce expirée
+  IMPORT_COMPLETED       // Import terminé
+  INACTIVE_USER          // Utilisateur inactif (30 jours)
+  MANUAL                 // Envoi manuel depuis l'admin
+}
+
+enum EmailStatus {
+  DRAFT
+  ACTIVE
+  PAUSED
+  ARCHIVED
+}
+
+model EmailTemplate {
+  id          String   @id @default(cuid())
+
+  // Template info
+  name        String   // "Bienvenue", "Confirmation d'abonnement", etc.
+  subject     String   // Sujet de l'email
+  preheader   String?  // Texte de prévisualisation
+
+  // Content (HTML + Plain text)
+  htmlContent String   @db.Text  // HTML version
+  textContent String?  @db.Text  // Plain text version (fallback)
+
+  // Trigger configuration
+  trigger     EmailTrigger
+  delayMinutes Int     @default(0) // Délai avant envoi (0 = immédiat)
+
+  // Design
+  fromName    String   @default("Annoncify")
+  fromEmail   String   @default("noreply@annoncify.com")
+  replyTo     String?
+
+  // Status
+  status      EmailStatus @default(DRAFT)
+
+  // A/B Testing
+  isTestVariant Boolean  @default(false)
+  parentTemplateId String? // Si c'est une variante de test
+
+  // Tracking
+  openRate    Float?   // Taux d'ouverture (calculé)
+  clickRate   Float?   // Taux de clic (calculé)
+
+  // Relations
+  logs        EmailLog[]
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([trigger])
+  @@index([status])
+}
+
+model EmailCampaign {
+  id          String   @id @default(cuid())
+
+  // Campaign info
+  name        String
+  description String?  @db.Text
+
+  // Target
+  targetRole  UserRole? // Null = tous les rôles
+  targetUserIds String[] // IDs d'utilisateurs spécifiques (vide = tous)
+
+  // Template
+  templateId  String?  // Null pour campagne custom
+
+  // Custom content (si pas de template)
+  subject     String?
+  htmlContent String?  @db.Text
+  textContent String?  @db.Text
+
+  // Scheduling
+  scheduledAt DateTime? // Null = envoi immédiat
+  sentAt      DateTime?
+
+  // Stats
+  totalRecipients Int      @default(0)
+  totalSent       Int      @default(0)
+  totalDelivered  Int      @default(0)
+  totalOpened     Int      @default(0)
+  totalClicked    Int      @default(0)
+  totalBounced    Int      @default(0)
+
+  status      EmailStatus @default(DRAFT)
+
+  // Relations
+  logs        EmailLog[]
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([status])
+  @@index([scheduledAt])
+}
+
+enum EmailLogStatus {
+  PENDING
+  SENT
+  DELIVERED
+  OPENED
+  CLICKED
+  BOUNCED
+  FAILED
+}
+
+model EmailLog {
+  id          String   @id @default(cuid())
+
+  // Recipient
+  userId      String
+  email       String
+
+  // Content
+  templateId  String?
+  template    EmailTemplate? @relation(fields: [templateId], references: [id], onDelete: SetNull)
+
+  campaignId  String?
+  campaign    EmailCampaign? @relation(fields: [campaignId], references: [id], onDelete: SetNull)
+
+  subject     String
+  trigger     EmailTrigger?
+
+  // Status tracking
+  status      EmailLogStatus @default(PENDING)
+
+  // Timestamps
+  sentAt      DateTime?
+  deliveredAt DateTime?
+  openedAt    DateTime?
+  clickedAt   DateTime?
+  bouncedAt   DateTime?
+
+  // Error tracking
+  errorMessage String?  @db.Text
+
+  // Metadata
+  metadata    Json?    // Variables utilisées (prénom, nombre d'annonces, etc.)
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([userId])
+  @@index([email])
+  @@index([templateId])
+  @@index([campaignId])
+  @@index([status])
+  @@index([trigger])
+  @@index([createdAt])
+}
