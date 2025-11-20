@@ -276,9 +276,9 @@ export default async function AdminAnalyticsPage() {
           </CardHeader>
           <CardContent>
             <div className="space-y-3">
-              {platformStats.map((stat) => (
-                <div key={stat.platform} className="flex justify-between items-center">
-                  <span className="text-brand-gray-400">{stat.platform}</span>
+              {platformStats.map((stat: { platform: string | null; _count: number }) => (
+                <div key={stat.platform || 'unknown'} className="flex justify-between items-center">
+                  <span className="text-brand-gray-400">{stat.platform || 'Unknown'}</span>
                   <span className="text-lg font-semibold text-white">{stat._count}</span>
                 </div>
               ))}
@@ -293,7 +293,7 @@ export default async function AdminAnalyticsPage() {
           </CardHeader>
           <CardContent>
             <div className="space-y-3">
-              {userRoleStats.map((stat) => (
+              {userRoleStats.map((stat: { role: string; _count: number }) => (
                 <div key={stat.role} className="flex justify-between items-center">
                   <span className="text-brand-gray-400">{stat.role}</span>
                   <span className="text-lg font-semibold text-white">{stat._count}</span>

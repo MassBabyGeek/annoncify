@@ -12,6 +12,9 @@ const nextConfig = {
   images: {
     domains: ['img.clerk.com', 'images.unsplash.com'],
   },
+  // Skip static generation for error pages to avoid Clerk compatibility issues
+  skipTrailingSlashRedirect: true,
+  skipMiddlewareUrlNormalize: true,
 }
 
 export default withNextIntl(nextConfig)
