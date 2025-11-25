@@ -33,9 +33,6 @@ importers:
       '@annoncify/database':
         specifier: workspace:*
         version: link:../../packages/database
-      '@annoncify/email':
-        specifier: workspace:*
-        version: link:../../packages/email
       '@annoncify/shared':
         specifier: workspace:*
         version: link:../../packages/shared
@@ -224,6 +221,9 @@ importers:
       '@annoncify/typescript-config':
         specifier: workspace:*
         version: link:../../tooling/typescript
+      '@types/node':
+        specifier: ^20.12.12
+        version: 20.19.25
       react-email:
         specifier: ^2.1.4
         version: 2.1.6(@swc/helpers@0.5.15)(eslint@8.57.1)

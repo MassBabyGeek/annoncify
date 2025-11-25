@@ -13,7 +13,6 @@
   "dependencies": {
     "@annoncify/auth": "workspace:*",
     "@annoncify/database": "workspace:*",
-    "@annoncify/email": "workspace:*",
     "@annoncify/shared": "workspace:*",
     "@annoncify/ui": "workspace:*",
     "@clerk/nextjs": "6.35.1",

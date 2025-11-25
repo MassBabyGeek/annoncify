@@ -4,7 +4,29 @@
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
-      "outputs": [".next/**", "!.next/cache/**", "dist/**"]
+      "outputs": [".next/**", "!.next/cache/**", "dist/**"],
+      "env": [
+        "DATABASE_URL",
+        "DIRECT_URL",
+        "CLERK_SECRET_KEY",
+        "CLERK_WEBHOOK_SECRET",
+        "STRIPE_SECRET_KEY",
+        "STRIPE_WEBHOOK_SECRET",
+        "STRIPE_PRICE_ID_FREE",
+        "STRIPE_PRICE_ID_STARTER",
+        "STRIPE_PRICE_ID_PRO",
+        "STRIPE_PRICE_ID_BUSINESS",
+        "RESEND_API_KEY",
+        "RESEND_FROM_EMAIL",
+        "SUPABASE_SERVICE_ROLE_KEY",
+        "NODE_ENV",
+        "AMAZON_CLIENT_ID",
+        "AMAZON_CLIENT_SECRET",
+        "EBAY_CLIENT_ID",
+        "EBAY_CLIENT_SECRET",
+        "REDIS_URL",
+        "REDIS_TOKEN"
+      ]
     },
     "dev": {
       "cache": false,

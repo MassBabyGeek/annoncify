@@ -1,12 +1,8 @@
 import { Resend } from 'resend'
 
-if (!process.env.RESEND_API_KEY) {
-  throw new Error('RESEND_API_KEY is not defined')
-}
+// Initialize Resend with API key (with fallback for build time)
+// During build, Next.js may try to evaluate this module without runtime env vars
+export const resend = new Resend(process.env.RESEND_API_KEY || 're_build_placeholder')
 
-export const resend = new Resend(process.env.RESEND_API_KEY)
-
-export * from './templates/welcome'
-export * from './templates/import-complete'
-export * from './templates/limit-reached'
-export * from './templates/subscription-success'
+// Templates are not exported to avoid Next.js trying to compile them during build
+// Import them directly from ./templates/* when needed
