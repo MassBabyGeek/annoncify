@@ -204,7 +204,7 @@ async function RecentActivityList() {
 
   return (
     <>
-      {activities.map((activity) => (
+      {activities.map((activity: typeof activities[number]) => (
         <div key={activity.id} className="flex items-center gap-3">
           <div className="h-2 w-2 rounded-full bg-brand-yellow-400" />
           <div className="flex-1">
