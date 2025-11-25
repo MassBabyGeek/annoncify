@@ -1,8 +1,8 @@
 import { Resend } from 'resend'
 import { prisma, EmailTrigger, EmailLogStatus } from '@annoncify/database'
 
-// Initialize Resend with API key
-const resend = new Resend(process.env.RESEND_API_KEY)
+// Initialize Resend with API key (with fallback for build time)
+const resend = new Resend(process.env.RESEND_API_KEY || 're_placeholder')
 
 interface EmailVariables {
   firstName?: string
