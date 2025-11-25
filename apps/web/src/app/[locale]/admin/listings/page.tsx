@@ -1,4 +1,4 @@
-import { prisma, Listing } from '@annoncify/database'
+import { prisma } from '@annoncify/database'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@annoncify/ui'
 import { AdminListingsTable } from './admin-listings-table'
 
