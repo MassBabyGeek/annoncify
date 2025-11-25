@@ -97,7 +97,7 @@ export default async function AdminListingsPage() {
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-            {Object.entries(platformCounts).map(([platform, count]: [string, number]) => (
+            {(Object.entries(platformCounts) as [string, number][]).map(([platform, count]) => (
               <div
                 key={platform}
                 className="p-4 rounded-lg bg-brand-gray-800 border border-brand-gray-700"

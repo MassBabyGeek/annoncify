@@ -185,7 +185,7 @@ export default async function AdminSubscriptionsPage() {
         </CardHeader>
         <CardContent>
           <div className="space-y-3">
-            {Object.entries(usersByTier).map(([tier, count]) => {
+            {(Object.entries(usersByTier) as [string, number][]).map(([tier, count]) => {
               const percentage = subscribedUsers.length > 0
                 ? ((count / subscribedUsers.length) * 100).toFixed(1)
                 : '0'
