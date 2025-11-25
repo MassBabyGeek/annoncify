@@ -19,7 +19,7 @@ export default async function AdminSubscriptionsPage() {
   })
 
   // Calculate MRR (Monthly Recurring Revenue)
-  const mrr = subscribedUsers.reduce((total, user) => {
+  const mrr = subscribedUsers.reduce((total: number, user: typeof subscribedUsers[number]) => {
     const plan = subscriptionPlans.find((p) => p.stripePriceId === user.stripePriceId)
     if (plan && plan.interval === 'month') {
       return total + plan.price
@@ -29,7 +29,7 @@ export default async function AdminSubscriptionsPage() {
 
   // Group users by role (subscription tier)
   const usersByTier = subscribedUsers.reduce(
-    (acc, user) => {
+    (acc: Record<string, number>, user: typeof subscribedUsers[number]) => {
       acc[user.role] = (acc[user.role] || 0) + 1
       return acc
     },
