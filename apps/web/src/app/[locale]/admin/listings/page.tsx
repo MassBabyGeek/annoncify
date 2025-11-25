@@ -1,4 +1,4 @@
-import { prisma } from '@annoncify/database'
+import { prisma, Listing } from '@annoncify/database'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@annoncify/ui'
 import { AdminListingsTable } from './admin-listings-table'
 
@@ -20,13 +20,13 @@ export default async function AdminListingsPage() {
 
   // Calculate statistics
   const totalListings = listings.length
-  const draftListings = listings.filter((l) => l.status === 'DRAFT').length
-  const activeListings = listings.filter((l) => l.status === 'ACTIVE').length
-  const soldListings = listings.filter((l) => l.status === 'SOLD').length
+  const draftListings = listings.filter((l: typeof listings[number]) => l.status === 'DRAFT').length
+  const activeListings = listings.filter((l: typeof listings[number]) => l.status === 'ACTIVE').length
+  const soldListings = listings.filter((l: typeof listings[number]) => l.status === 'SOLD').length
 
   // Platform stats
   const platformCounts = listings.reduce(
-    (acc, listing) => {
+    (acc: Record<string, number>, listing: typeof listings[number]) => {
       acc[listing.platform] = (acc[listing.platform] || 0) + 1
       return acc
     },
